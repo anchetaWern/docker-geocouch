@@ -8,6 +8,7 @@ ENV COUCH_SRC ${COUCH_HOME}src/couchdb
 ENV GEOCOUCH_SRC /opt/geocouch/
 ENV GEOCOUCH_BIN ${GEOCOUCH_SRC}gc-couchdb/ebin/
 ENV GEOCOUCH_INI ${GEOCOUCH_SRC}gc-couchdb/etc/couchdb/default.d/
+ENV ERL_LIB_HOME /usr/local/lib/couchdb/erlang/lib
 
 # Install unzip and git after the customary update
 RUN apt-get update && apt-get install -y unzip git
@@ -24,9 +25,13 @@ RUN cd ${COUCH_HOME} && ./configure && make dev && make install
 
 # Get the GeoCouch source with the "MB-15975: Always find a split candidate" issue fixed
 RUN cd /opt; git clone -b newvtree-fix-split-candidates https://github.com/vmx/geocouch.git
+
+# Build GeoCouch
 RUN cd ${GEOCOUCH_SRC}; make couchdb
-RUN cp -r ${GEOCOUCH_SRC}gc-couchdb/ ${COUCH_HOME}/src &&\
-    cp -r ${GEOCOUCH_SRC}vtree/ ${COUCH_HOME}/src
+
+# Copy the GeoCouch libraries to the CouchDB installation
+RUN cp -r ${GEOCOUCH_SRC}gc-couchdb/ ${ERL_LIB_HOME} &&\
+    cp -r ${GEOCOUCH_SRC}vtree/ ${ERL_LIB_HOME}
 
 # Configuration
 ADD ./opt /opt
@@ -35,14 +40,6 @@ RUN /opt/couchdb-config
 
 # Define mountable directories.
 VOLUME ["/usr/local/var/log/couchdb", "/usr/local/var/lib/couchdb", "/usr/local/etc/couchdb", "${COUCH_HOME}", "${GEOCOUCH_SRC}"]
-
-# Make erlang aware of the geocouch couchdb plugin beam files
-ENV ERL_FLAGS="+A 4 -pa ${GEOCOUCH_BIN}"
-
-# Test GeoCouch
-RUN ERL_LIBS=${COUCH_HOME}; cd ${COUCH_HOME}; ./utils/run &
-RUN sleep 10; cd ${GEOCOUCH_SRC}gc-couchdb; \
-    ./utils/runjstests.sh ${COUCH_HOME}test/javascript/run ./share/www/script/test 
 
 ENTRYPOINT /opt/start_couch && /bin/bash
 EXPOSE 5984
