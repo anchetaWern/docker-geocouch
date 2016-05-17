@@ -5,19 +5,19 @@ adduser --system --disabled-password \
   --shell=/bin/bash --group --gecos "" couchdb
 
 # copy geocouch configuration to make couchdb aware of the new handlers
-cp /opt/geocouch-couchdb1.3.x/etc/couchdb/default.d/geocouch.ini /usr/local/etc/couchdb/default.d/geocouch.ini
+cp ${GEOCOUCH_INI}geocouch.ini /usr/local/etc/couchdb/default.d/geocouch.ini
 
 chown -R couchdb:couchdb /usr/local/var/lib/couchdb \
   /usr/local/var/log/couchdb \
   /usr/local/var/run/couchdb \
   /usr/local/etc/couchdb \
-  /opt/geocouch-couchdb1.3.x/ebin
+  ${GEOCOUCH_BIN}
 
 chmod 0770 /usr/local/var/lib/couchdb \
   /usr/local/var/log/couchdb \
   /usr/local/var/run/couchdb \
   /usr/local/etc/couchdb \
-  /opt/geocouch-couchdb1.3.x/ebin
+  ${GEOCOUCH_BIN}
 
 chmod 664 /usr/local/etc/couchdb/*.ini
 chmod 775 /usr/local/etc/couchdb/*.d
