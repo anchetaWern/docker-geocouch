@@ -6,14 +6,14 @@ chown -R couchdb:couchdb /usr/local/var/lib/couchdb \
   /usr/local/var/log/couchdb \
   /usr/local/var/run/couchdb \
   /usr/local/etc/couchdb \
-  /opt/geocouch-couchdb1.3.x/ebin
+  ${GEOCOUCH_BIN}
 # make couchdb beam plugins readable by the unpriviledged user it will run as.
 
 chmod -R 0770 /usr/local/var/lib/couchdb \
   /usr/local/var/log/couchdb \
   /usr/local/var/run/couchdb \
   /usr/local/etc/couchdb \
-  /opt/geocouch-couchdb1.3.x/ebin
+  ${GEOCOUCH_BIN}
 
 chmod 664 /usr/local/etc/couchdb/*.ini
 chmod 775 /usr/local/etc/couchdb/*.d
