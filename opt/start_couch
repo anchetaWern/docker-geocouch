@@ -21,6 +21,5 @@ chmod 775 /usr/local/etc/couchdb/*.d
 # expose environmental variables
 echo $PATH > /usr/local/var/log/couchdb/path.txt
 echo $ERL_FLAGS > /usr/local/var/log/couchdb/erl_flags.txt
-# to be inspected by an external bash container
 
-exec sudo -i -u couchdb mon couchdb
+/etc/init.d/couchdb start
