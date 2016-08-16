@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y unzip git
 RUN (mkdir /tmp/mon && cd /tmp/mon && curl -L# https://github.com/visionmedia/mon/archive/1.2.3.tar.gz | tar zx --strip 1 && make install)
 
 # Get the CouchDB source
-RUN cd /opt; wget http://apache.openmirror.de/couchdb/source/${COUCH_VERSION}/apache-couchdb-${COUCH_VERSION}.tar.gz && \
+RUN cd /opt; wget http://www-eu.apache.org/dist/couchdb/source/${COUCH_VERSION}/a$
     tar xzf /opt/apache-couchdb-${COUCH_VERSION}.tar.gz
 
 # Build CouchDB
